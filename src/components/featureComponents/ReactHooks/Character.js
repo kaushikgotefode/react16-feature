@@ -86,7 +86,7 @@
 
 // ===========================================================================================
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 import Summary from "./Summary";
 import { useHttp } from "../../hodComponents/http";
@@ -96,6 +96,7 @@ const Character = props => {
     "https://swapi.co/api/people/" + props.selectedChar,
     [props.selectedChar]
   );
+  let renderCount = useRef(0);
   let loadedCharacter = null;
   if (charData) {
     loadedCharacter = {
@@ -132,6 +133,7 @@ const Character = props => {
   } else if (!isLoading && !loadedCharacter) {
     content = <p>Failed to fetch character.</p>;
   }
+  console.log('Character container re-rendered...', renderCount.current++);
   return content;
 };
 

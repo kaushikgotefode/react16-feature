@@ -53,15 +53,19 @@
 
 // ===========================================================================================
 
-import React, { useState } from "react";
+import React, { useState, useContext, useRef } from "react";
 
 import CharPicker from "./CharPicker";
 import Character from "./Character";
+import { UserContext } from '../../../utils/UserContext';
 
 const ReactHooks = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(1);
   const [side, setSide] = useState("light");
   const [destroyed, setDestroyed] = useState(false);
+  const { userName, setUserName } = useContext(UserContext);
+
+  const summaryContainerRef = useRef();
 
   const sideHandler = side => {
     setSide(side);
@@ -78,6 +82,9 @@ const ReactHooks = () => {
 
   let content = (
     <React.Fragment>
+      <div ref={summaryContainerRef}>
+        Hi { userName }
+      </div>
       <CharPicker
         side={side}
         selectedChar={selectedCharacter}
@@ -86,6 +93,10 @@ const ReactHooks = () => {
       <Character selectedChar={selectedCharacter} />
       <button onClick={sideHandler.bind(this, "light")}>Light Side</button>
       <button onClick={sideHandler.bind(this, "dark")}>Dark Side</button>
+      <button onClick={() => setUserName('Jake Ryan')}>On Click You Switch to Jake Ryan !</button>
+      <button onClick={() => console.log('Reference to summary', summaryContainerRef.current.innerText)}>
+        Console Username
+      </button>
       {side === "dark" && (
         <button onClick={destructionHandler}>DESTROY!</button>
       )}
