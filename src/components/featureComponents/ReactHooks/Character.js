@@ -20,99 +20,46 @@ class Character extends Component {
       this.fetchData();
     }
   }
+componentDidMount() {
+  console.log("Character.js componentDidMount");
+  this.fetchData();
+}
 
-//   render() {
-//     let content = <p>Loading Character...</p>;
-
-//     if (!this.state.isLoading && this.state.loadedCharacter.id) {
-//       content = (
-//         <Summary
-//           name={this.state.loadedCharacter.name}
-//           gender={this.state.loadedCharacter.gender}
-//           height={this.state.loadedCharacter.height}
-//           hairColor={this.state.loadedCharacter.colors.hair}
-//           skinColor={this.state.loadedCharacter.colors.skin}
-//           movieCount={this.state.loadedCharacter.movieCount}
-//         />
-//       );
-//     } else if (!this.state.isLoading && !this.state.loadedCharacter.id) {
-//       content = <p>Failed to fetch character.</p>;
-//     }
-//     return content;
-//   }
-// }
-
-// export default Character;
-
-// ===========================================================================================
-
-import React, { useEffect, useRef } from "react";
-
-import Summary from "./Summary";
-import { useHttp } from "../../hodComponents/http";
-
-const Character = props => {
-  const [isLoading, charData] = useHttp(
-    "https://swapi.co/api/people/" + props.selectedChar,
-    [props.selectedChar]
+fetchData = () => {
+  console.log(
+    'Sending Http request for new character with id ' +
+      this.props.selectedChar
   );
-  let renderCount = useRef(0);
-  let loadedCharacter = null;
-  if (charData) {
-    loadedCharacter = {
-      id: props.selectedChar,
-      name: charData.name,
-      height: charData.height,
-      colors: {
-        hair: charData.hair_color,
-        skin: charData.skin_color
-      },
-      gender: charData.gender,
-      movieCount: charData.films.length
-    };
-  componentDidMount() {
-    console.log("Character.js componentDidMount");
-    this.fetchData();
-  }
-
-  fetchData = () => {
-    console.log(
-      'Sending Http request for new character with id ' +
-        this.props.selectedChar
-    );
-    this.setState({ isLoading: true });
-    fetch('https://swapi.co/api/people/' + this.props.selectedChar)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Could not fetch person!');
-        }
-        return response.json();
-      })
-      .then(charData => {
-        const loadedCharacter = {
-          id: this.props.selectedChar,
-          name: charData.name,
-          height: charData.height,
-          colors: {
-            hair: charData.hair_color,
-            skin: charData.skin_color
-          },
-          gender: charData.gender,
-          movieCount: charData.films.length
-        };
-        this.setState({ loadedCharacter: loadedCharacter, isLoading: false });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
-  componentWillUnmount() {
-    console.log('Character.js componentWillUnmount');
-  }
-  console.log('Character container re-rendered...', renderCount.current++);
-  return content;
+  this.setState({ isLoading: true });
+  fetch('https://swapi.co/api/people/' + this.props.selectedChar)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Could not fetch person!');
+      }
+      return response.json();
+    })
+    .then(charData => {
+      const loadedCharacter = {
+        id: this.props.selectedChar,
+        name: charData.name,
+        height: charData.height,
+        colors: {
+          hair: charData.hair_color,
+          skin: charData.skin_color
+        },
+        gender: charData.gender,
+        movieCount: charData.films.length
+      };
+      this.setState({ loadedCharacter: loadedCharacter, isLoading: false });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
+
+componentWillUnmount() {
+  console.log('Character.js componentWillUnmount');
+}
 
   render() {
     let content = <p>Loading Character...</p>;
