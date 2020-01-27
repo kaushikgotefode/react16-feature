@@ -21,6 +21,55 @@ class Character extends Component {
     }
   }
 
+//   render() {
+//     let content = <p>Loading Character...</p>;
+
+//     if (!this.state.isLoading && this.state.loadedCharacter.id) {
+//       content = (
+//         <Summary
+//           name={this.state.loadedCharacter.name}
+//           gender={this.state.loadedCharacter.gender}
+//           height={this.state.loadedCharacter.height}
+//           hairColor={this.state.loadedCharacter.colors.hair}
+//           skinColor={this.state.loadedCharacter.colors.skin}
+//           movieCount={this.state.loadedCharacter.movieCount}
+//         />
+//       );
+//     } else if (!this.state.isLoading && !this.state.loadedCharacter.id) {
+//       content = <p>Failed to fetch character.</p>;
+//     }
+//     return content;
+//   }
+// }
+
+// export default Character;
+
+// ===========================================================================================
+
+import React, { useEffect, useRef } from "react";
+
+import Summary from "./Summary";
+import { useHttp } from "../../hodComponents/http";
+
+const Character = props => {
+  const [isLoading, charData] = useHttp(
+    "https://swapi.co/api/people/" + props.selectedChar,
+    [props.selectedChar]
+  );
+  let renderCount = useRef(0);
+  let loadedCharacter = null;
+  if (charData) {
+    loadedCharacter = {
+      id: props.selectedChar,
+      name: charData.name,
+      height: charData.height,
+      colors: {
+        hair: charData.hair_color,
+        skin: charData.skin_color
+      },
+      gender: charData.gender,
+      movieCount: charData.films.length
+    };
   componentDidMount() {
     console.log("Character.js componentDidMount");
     this.fetchData();
@@ -61,6 +110,9 @@ class Character extends Component {
   componentWillUnmount() {
     console.log('Character.js componentWillUnmount');
   }
+  console.log('Character container re-rendered...', renderCount.current++);
+  return content;
+};
 
   render() {
     let content = <p>Loading Character...</p>;
